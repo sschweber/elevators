@@ -4,8 +4,8 @@ require './floors.rb'
 
 class Persons
 
-	def initialize (floor, desired_floor)
-		@floor = floor
+	def initialize (floors, desired_floor)
+		@floors = floors
 		@desired_floor = desired_floor
 		@on_elevator = false
 	end
@@ -16,16 +16,22 @@ class Persons
 
 	def request
 		elevator = Elevators.new(5, 1)
-		if @floor == @desired_floor
-			return true
-		end
-
-		if @floor.elevator
-			while @desired_floor != elevator.current do
-				@on_elevator = true
-				elevator.move_to(@desired_floor)
+		@floors.each do |f|
+			if f.get_num == @desired_floor
+				return true
 			end
-			@on_elevator = false
+
+			if f.elevator
+				while @desired_floor != elevator.current do
+					@on_elevator = true
+					puts "On Elevator"
+					elevator.increase_cap
+					elevator.move_to(@desired_floor)
+				end
+				elevator.decrease_cap
+				puts "Off Elevator"
+				@on_elevator = false
+			end
 		end
 	end
 

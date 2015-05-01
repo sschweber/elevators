@@ -20,6 +20,10 @@ class Elevators
 		@capacity += 1
 	end
 
+	def decrease_cap
+		@capacity -= 1
+	end
+
 	def move_to(n)
 		if n == @current_floor
 			@direction = "still"

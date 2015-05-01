@@ -10,17 +10,19 @@ class Building
 		@max_floor = number_of_floors
 		@num_elevators = number_of_elevators
 		@elevators = Array.new
-		@people = number_of_people
+		@number_of_people = number_of_people
+		@people = Array.new
 		@floors = Array.new
 	end
 
-	#create given number of floors
-	def create_floors 
-		i = @max_floor
+	def create_people
+		rand = Random.new
+		i = @number_of_people
 		while i > 0 do
-			@floors.push(Floors.new(i, @elevators, @people))
+			@people.push(Persons.new(@floors, rand.rand(2)+1))
 			i -= 1
 		end
+		puts @people.to_s
 	end
 
 	#create given number of elevators
@@ -32,6 +34,14 @@ class Building
 		end
 	end
 
+	#create given number of floors
+	def create_floors 
+		i = @max_floor
+		while i > 0 do
+			@floors.push(Floors.new(i, @elevators, @people))
+			i -= 1
+		end
+	end
 	#check if an elevator needs to be sent somewhere
 	def send_elevator
 		@floors.each do |f| #for each floor in floors
@@ -44,6 +54,6 @@ class Building
 
 	def to_s
 		puts "There are #{@num_elevators} elevators available in this building which has 
-			#{@max_floor} floors, and #{@people} people."
+			#{@max_floor} floors, and #{@number_of_people} people."
 	end
 end

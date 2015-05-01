@@ -7,41 +7,43 @@ class Floors
 #people need to ask floor is there an elevator here
 	def initialize (n, elevators, people)
 		@elevators = elevators
-		@people = Array.new
+		@people = people
 		@number_of_elevators = 0
 		@floor_num = n
-		@number_of_people = people
+		@number_of_people = people.size
 	end
 
+	def get_num
+		return @floor_num
+	end
 	#check if an elevator is available on this floor
 	def elevator
 		@elevators.each do |e|
-			if e.current == @floor_num
-				@number_of_elevators += 1
-				e.increase_cap
-				if e.capacity >= e.max
-					@number_of_elevators -= 1
-					puts "Elevator is full!"
+			@people.each do |person|
+				if ((e.current == @floor_num) && (person.end_location != @floor_num))
+					puts "Getting on elevator.."
+					@number_of_people -= 1
+					e.increase_cap
+					if e.capacity >= e.max
+						puts "Elevator is full!"
+						return false
+					end
+					@number_of_elevators = 1
+					e.to_s
+					return true
+				elsif person.end_location == @floor_num
+					e.decrease_cap
+					@number_of_people += 1
 					return false
-				end
-				puts "On Elevator"
-				@number_of_elevators += 1
-				e.to_s
-				return true
+				end	
 			end
 		end
+		@number_of_elevators = 0
 		puts "No Elevators Available"
 	end
 
 	def people_waiting
 		return @number_of_people
-	end
-
-	def create_people
-		while @number_of_people > 0 do
-			@people.push(Persons.new(@floor_num))
-			@number_of_people -= 1
-		end
 	end
 
 	def request_elevator
@@ -50,7 +52,7 @@ class Floors
 				if elevator
 					person.request
 				else
-					@elevator.each do |e|
+					@elevators.each do |e|
 						if e.max > 0
 							e.move_to(@floor_num)
 							break

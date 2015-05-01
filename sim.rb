@@ -11,6 +11,7 @@ class Simulation
 	end
 
 	def run (n)
+		@building.create_people
 		@building.create_floors
 		@building.create_elevators
 		@building.to_s
